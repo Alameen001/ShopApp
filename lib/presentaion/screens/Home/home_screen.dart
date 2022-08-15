@@ -9,7 +9,6 @@ import 'package:shopx/presentaion/screens/Home/widget/poster_img.dart';
 import 'package:shopx/presentaion/screens/Login/login.dart';
 import 'package:shopx/presentaion/screens/Search/search.dart';
 
-
 var scaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatelessWidget {
@@ -19,15 +18,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          key: scaffoldKey,
+        key: scaffoldKey,
         drawer: Drawer(),
         appBar: PreferredSize(
-          
           child: Container(
             decoration: BoxDecoration(
-              boxShadow: [
-                
-              ],
+              boxShadow: [],
             ),
             child: Column(
               children: [
@@ -36,15 +32,16 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(onPressed: () {
-                       scaffoldKey.currentState?.openDrawer();
-                    }, icon: Icon(Icons.menu)),
+                    IconButton(
+                        onPressed: () {
+                          scaffoldKey.currentState?.openDrawer();
+                        },
+                        icon: Icon(Icons.menu)),
                     Spacer(),
                     AppbarTitlename(),
                     Spacer(),
                     IconButton(
                         onPressed: () {
-                          print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                           Get.to(LoginScreen());
                         },
                         icon: Icon(Icons.notifications_active_rounded)),
@@ -62,7 +59,7 @@ class HomeScreen extends StatelessWidget {
           ),
           preferredSize: Size.fromHeight(130),
         ),
-        body:ListView(
+        body: ListView(
           children: [
             CircleSliding(),
             PosterImg(),
@@ -70,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             FashionModels(),
             HeadlineBrand(),
           ],
-        )  ,
+        ),
       ),
     );
   }

@@ -1,24 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shopx/presentaion/screens/Home/home_screen.dart';
 
 import 'package:shopx/presentaion/screens/Order/Order_Screen.dart';
+import 'package:shopx/presentaion/screens/Payment/Widgets/payment_success.dart';
 
 class PaymentScreen extends StatefulWidget {
   String? user;
-  PaymentScreen({Key? key, this.user, required this.payPrice, required this.name, required this.phoneno, required this.picode, required this.city, required this.state, required this.locality, required this.building, required this.landmark}) : super(key: key);
-  
+  PaymentScreen(
+      {Key? key,
+      this.user,
+      required this.payPrice,
+      required this.name,
+      required this.phoneno,
+      required this.picode,
+      required this.city,
+      required this.state,
+      required this.locality,
+      required this.building,
+      required this.productId,
+      required this.cartId,
+      required this.productStocks,
+      required this.landmark})
+      : super(key: key);
 
-    final String name;
+  final String name;
   final String phoneno;
-    final String picode;
+  final String picode;
   final String city;
-
+  final List<String> productId;
+  final List<String> cartId;
+  final List<String> productStocks;
   final String state;
   final String locality;
-    final String building;
+  final String building;
   final String landmark;
-
-
 
   final String payPrice;
 
@@ -96,23 +114,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text("Product Price"),
-                          
-
                           Text("₹ ${widget.payPrice}"),
-                         
-                        
                         ],
-                        
                       ),
-                      
                       SizedBox(
                         height: 15,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text("Delivery Charge",style: TextStyle(fontSize: 16)),
-                          Text("Delivery Free",style: TextStyle(color: Colors.green,fontSize: 16,fontWeight: FontWeight.w500),),
+                          Text("Delivery Charge",
+                              style: TextStyle(fontSize: 16)),
+                          Text(
+                            "Delivery Free",
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -139,7 +158,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                       Text(
+                      Text(
                         "₹ ${widget.payPrice} ",
                         style: TextStyle(
                             color: Colors.black,
@@ -147,9 +166,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             fontWeight: FontWeight.w700),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          Get.to(OrderScreen(name: widget.name, phoneno:widget.phoneno, picode:widget.picode, city:widget.city, state:widget. state, locality:widget.locality, building:widget. building, landmark:widget. landmark, payPrice: widget.payPrice.toString(),));
-                        },
+                        onPressed: payment_method.isEmpty
+                            ? null
+                            : () {
+                                payNowMethod();
+                                // Get.to(OrderScreen(
+                                //   name: widget.name,
+                                //   phoneno: widget.phoneno,
+                                //   picode: widget.picode,
+                                //   city: widget.city,
+                                //   state: widget.state,
+                                //   locality: widget.locality,
+                                //   building: widget.building,
+                                //   landmark: widget.landmark,
+                                //   payPrice: widget.payPrice.toString(),
+                                // ));
+                              },
                         style: ElevatedButton.styleFrom(
                             fixedSize: const Size(160, 25)),
                         child: const Text('PAY NOW',
@@ -164,5 +196,41 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ],
       ),
     );
+  }
+
+  payNowMethod() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    if (payment_method == 'Cash On Delivery') {
+      Get.to(PaymentSuccess());
+      for (int i = 0; i < widget.productId.length; i++) {
+        firestore.collection("Orders").add(
+          {
+            "productId": widget.productId[i],
+            "userId": userId,
+            "address": {
+              "name": widget.name,
+              "phone": widget.phoneno,
+              "pincode": widget.picode,
+              "city": widget.city,
+              "state": widget.state,
+            }
+          },
+        );
+
+        List<int> parseproductStocks =
+            widget.productStocks.map((e) => int.parse(e)).toList();
+
+        int count = parseproductStocks[i] - 1;
+
+        firestore
+            .collection("products")
+            .doc(widget.productId[i])
+            .update({"count": count.toString()});
+
+        firestore.collection("cart").doc(widget.cartId[i]).delete();
+      }
+    }
   }
 }

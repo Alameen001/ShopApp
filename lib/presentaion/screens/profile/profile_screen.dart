@@ -4,9 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shopx/Services/Auth_service.dart';
 import 'package:shopx/presentaion/screens/Login/login.dart';
+import 'package:shopx/presentaion/screens/My%20Adress/Adress_screen.dart';
+import 'package:shopx/presentaion/screens/Order/Order_Screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen(
+      {Key? key,
+      this.name,
+      this.phoneno,
+      this.picode,
+      this.city,
+      this.state,
+      this.locality,
+      this.building,
+      this.landmark,
+      this.payPrice})
+      : super(key: key);
+
+  final String? name;
+  final String? phoneno;
+  final String? picode;
+  final String? city;
+
+  final String? state;
+  final String? locality;
+  final String? building;
+  final String? landmark;
+  final String? payPrice;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -138,6 +162,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   thickness: 2,
                 ),
                 ListTile(
+                  onTap: () {
+                    // Get.to(OrderScreen(
+                    //     name: widget.name,
+                    //     phoneno: widget.phoneno,
+                    //     picode: widget.picode,
+                    //     city: widget.city,
+                    //     state: widget.state,
+                    //     locality: widget.locality,
+                    //     building: widget.building,
+                    //     landmark: widget.landmark,
+                    //     payPrice: widget.payPrice));
+                  },
                   title: Text(
                     "Orders",
                   ),
@@ -162,6 +198,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 ListTile(
+                  onTap: () {
+                    // Get.to(AdressScreen(price: "",));
+                  },
                   title: Text(
                     "Adress",
                   ),

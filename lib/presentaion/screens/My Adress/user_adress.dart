@@ -70,7 +70,10 @@ class _UserAdressScreenState extends State<UserAdressScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text("Contact Info"),
+                    Text("Contact Info",textAlign: TextAlign.center,style: TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.w600,letterSpacing: 1),),
+                      SizedBox(
+                      height: 20,
+                    ),
                     TextInputfield(
                       hinttext: "Name",
                       Tcontroller: nameController,
@@ -88,7 +91,10 @@ class _UserAdressScreenState extends State<UserAdressScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text("Adress Info"),
+                    Text("Adress Info",textAlign: TextAlign.center,style: TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.w600,letterSpacing: 1),),
+                      SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -128,11 +134,11 @@ class _UserAdressScreenState extends State<UserAdressScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text("Type of Adress"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GenderRadio(),
+                    // Text("Type of Adress"),
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // GenderRadio(),
                     SizedBox(
                       height: 60,
                     ),
@@ -169,7 +175,7 @@ class _UserAdressScreenState extends State<UserAdressScreen> {
                       
                         user.uid);
                     print('sucessful');
-                    Get.to(AdressScreen(price: '',));
+                    // Get.to(AdressScreen(price: '',));
                   }
                 });
 

@@ -99,7 +99,7 @@ class ProductList extends StatelessWidget {
                           DocumentSnapshot data = snapshot.data!.docs[index];
                           return GestureDetector(
                             onTap: () {
-                              Get.to(() => ProductDetail(description: data['description'], count: data['count'], size: data['size'], name: data['name'], price: data['price'], image: data['image'], id: data.id,));
+                              Get.to(() => ProductDetail(description: data['description'], count: data['count'].toString(), size: data['size'], name: data['name'], price: data['price'], image: data['image'], id: data.id,));
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

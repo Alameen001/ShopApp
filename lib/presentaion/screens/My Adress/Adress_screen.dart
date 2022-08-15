@@ -11,10 +11,18 @@ import 'package:shopx/presentaion/screens/My%20Adress/user_adress.dart';
 import 'package:shopx/presentaion/screens/Payment/payment.dart';
 
 class AdressScreen extends StatelessWidget {
-  AdressScreen({Key? key, required this.price}) : super(key: key);
+  AdressScreen(
+      {Key? key,
+      required this.price,
+     this.productId,
+     this.productStocks,
+      this.cartId})
+      : super(key: key);
 
   final String price;
-
+  List<String>? productId;
+  List<String>? cartId;
+  List<String>? productStocks;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
@@ -72,9 +80,13 @@ class AdressScreen extends StatelessWidget {
                                 print(firebaseAuth.currentUser!.uid);
                                 return GestureDetector(
                                   onTap: () {
+                                  
                                     Get.to(PaymentScreen(
                                         payPrice: price,
+                                        productStocks: productStocks!,
+                                        cartId: cartId!,
                                         name: adress.name,
+                                        productId: productId!,
                                         phoneno: adress.phoneno,
                                         picode: adress.pincode,
                                         city: adress.city,
@@ -82,6 +94,7 @@ class AdressScreen extends StatelessWidget {
                                         locality: adress.loacality,
                                         building: adress.buildingnmae,
                                         landmark: adress.landmark));
+                                          print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
                                   },
                                   child: Card(
                                     color: Color.fromARGB(255, 238, 232, 232),
@@ -93,45 +106,65 @@ class AdressScreen extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(adress.name),
-
-                                          // Text(adress.pincode),
+                                          Center(
+                                              child: Text(
+                                            adress.name,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 22,
+                                                letterSpacing: 1,
+                                                color: Colors.red),
+                                          )),
                                           Text(adress.city),
-                                          Text(adress.pincode),
                                           Text(adress.state),
                                           Text(adress.loacality),
                                           Text(adress.buildingnmae),
-
                                           Text(adress.landmark),
-                                          Text("Phone No : ${adress.phoneno}"),
+                                          Text(adress.pincode),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            "Phone No : ${adress.phoneno}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 17,
+                                                letterSpacing: 1),
+                                          ),
                                           SizedBox(
                                             height: 10,
                                           ),
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.center,
                                             children: [
+                                              // SizedBox(
+                                              //     width: 120,
+                                              //     child: ElevatedButton(
+                                              //       onPressed: () {},
+                                              //       child: Text("Edit"),
+                                              //       style: ButtonStyle(
+                                              //           shape: MaterialStateProperty.all(
+                                              //               RoundedRectangleBorder(
+                                              //                   borderRadius:
+                                              //                       BorderRadius
+                                              //                           .circular(
+                                              //                               18))),
+                                              //           backgroundColor:
+                                              //               MaterialStateProperty
+                                              //                   .all(Colors
+                                              //                       .black)),
+                                              //     )),
                                               SizedBox(
                                                   width: 120,
                                                   child: ElevatedButton(
-                                                    onPressed: () {},
-                                                    child: Text("Edit"),
-                                                    style: ButtonStyle(
-                                                        shape: MaterialStateProperty.all(
-                                                            RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            18))),
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(Colors
-                                                                    .black)),
-                                                  )),
-                                              SizedBox(
-                                                  width: 120,
-                                                  child: ElevatedButton(
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      FirebaseFirestore.instance
+                                                          .collection('address')
+                                                          .doc(snapshot.data!
+                                                              .docs[index].id)
+                                                          .delete();
+                                                    },
                                                     child: Text("Remove"),
                                                     style: ButtonStyle(
                                                         shape: MaterialStateProperty.all(

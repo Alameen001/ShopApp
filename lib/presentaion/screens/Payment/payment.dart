@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shopx/presentaion/screens/Home/home_screen.dart';
 
 import 'package:shopx/presentaion/screens/Order/Order_Screen.dart';
@@ -46,6 +47,58 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String payment_method = '';
+
+  late Razorpay razorpay;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    razorpay = new Razorpay();
+
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    razorpay.clear();
+  }
+
+  void openCheckout() {
+    var options = {
+      'key': 'rzp_test_nbdQn9DkEq9dDK',
+      'amount': 
+     num.parse(widget.payPrice)*100,
+      'name': 'Acme Corp.',
+      'description': 'Fine T-Shirt',
+      'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+      'externals': {
+        'wallet': ['paytm']
+      }
+    };
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void handlePaymentSuccess() {
+    print("payment Success");
+  }
+
+  void handlePaymentError() {
+    print("payment error");
+  }
+
+  void handleExternalWallet() {
+    print("payment Success");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +258,37 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (payment_method == 'Cash On Delivery') {
       Get.to(PaymentSuccess());
       for (int i = 0; i < widget.productId.length; i++) {
+        firestore.collection("Orders").add(
+          {
+            "productId": widget.productId[i],
+            "userId": userId,
+            "address": {
+              "name": widget.name,
+              "phone": widget.phoneno,
+              "pincode": widget.picode,
+              "city": widget.city,
+              "state": widget.state,
+            }
+          },
+        );
+
+        List<int> parseproductStocks =
+            widget.productStocks.map((e) => int.parse(e)).toList();
+
+        int count = parseproductStocks[i] - 1;
+
+        firestore
+            .collection("products")
+            .doc(widget.productId[i])
+            .update({"count": count.toString()});
+
+        firestore.collection("cart").doc(widget.cartId[i]).delete();
+      }
+    }
+    if (payment_method == 'Bhim UPI') {
+      openCheckout();
+       Get.to(PaymentSuccess());
+        for (int i = 0; i < widget.productId.length; i++) {
         firestore.collection("Orders").add(
           {
             "productId": widget.productId[i],

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shopx/Controller/iamgepicker_controller.dart';
 import 'package:shopx/Services/Auth_service.dart';
+import 'package:shopx/functions/function.dart';
 import 'package:shopx/presentaion/screens/Login/login.dart';
 import 'package:shopx/presentaion/screens/My%20Adress/Adress_screen.dart';
 import 'package:shopx/presentaion/screens/Order/Order_Screen.dart';
@@ -35,6 +40,10 @@ class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
+
+var _image;
+
+final picImageController controller = Get.put(picImageController());
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
@@ -116,11 +125,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       BoxDecoration(borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(
-                          "https://cdn.shopify.com/s/files/1/0266/6276/4597/products/300896355BLACK_1.jpg?v=1654498968",
-                        ),
+                      // CircleAvatar(
+                      //   radius: 50,
+                      //   backgroundImage: NetworkImage(
+                      //     "https://cdn.shopify.com/s/files/1/0266/6276/4597/products/300896355BLACK_1.jpg?v=1654498968",
+                      //   ),
+                      // ),
+
+                      Stack(
+                        children: [
+                          Container(
+                              width: 110,
+                              height: 110,
+                              decoration: _image == null
+                                  ? BoxDecoration(
+                                      borderRadius: BorderRadius.circular(500),
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              'assets/download.jpg')),
+                                    )
+                                  : BoxDecoration(
+                                      borderRadius: BorderRadius.circular(500),
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: FileImage(File(_image))),
+                                    )),
+                          Positioned(
+                            bottom: 4,
+                            right: -14,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                var imageSelct = await imageSelect();
+                                setState(() {
+                                _image = imageSelct;
+                                });
+                                // Get.back();
+
+                                // FirebaseStorage storage =
+                                //     FirebaseStorage.instance;
+
+                                // TaskSnapshot taskSnapshot = await storage.ref("image").child().putFile(_image);
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
+                                shape: MaterialStateProperty.all(
+                                    const CircleBorder()),
+                              ),
+                              child: const Icon(
+                                Icons.photo_camera,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         width: 15,
@@ -163,16 +222,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ListTile(
                   onTap: () {
-                    // Get.to(OrderScreen(
-                    //     name: widget.name,
-                    //     phoneno: widget.phoneno,
-                    //     picode: widget.picode,
-                    //     city: widget.city,
-                    //     state: widget.state,
-                    //     locality: widget.locality,
-                    //     building: widget.building,
-                    //     landmark: widget.landmark,
-                    //     payPrice: widget.payPrice));
+                    Get.to(OrderScreen(
+                        name: "",
+                        phoneno: "",
+                        picode: "",
+                        city: "",
+                        state: "",
+                        locality: "",
+                        building: "",
+                        landmark: "",
+                        payPrice: ""));
                   },
                   title: Text(
                     "Orders",
@@ -199,7 +258,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ListTile(
                   onTap: () {
-                    // Get.to(AdressScreen(price: "",));
+                    Get.to(AdressScreen(
+                      price: "",
+                    ));
                   },
                   title: Text(
                     "Adress",

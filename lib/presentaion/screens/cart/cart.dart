@@ -27,7 +27,8 @@ class _CartScreenState extends State<CartScreen> {
   ///Dropdwon Count///
   ///
   ///
-  
+                int count = 0;
+  int quantity = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,8 +94,7 @@ class _CartScreenState extends State<CartScreen> {
                                   .doc(data['productId'])
                                   .snapshots(),
                               builder: (context, snapshot) {
-                                int count = 0;
-  int quantity = 1;
+                  
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
                                   return const Center(
@@ -346,7 +346,7 @@ class _CartScreenState extends State<CartScreen> {
                                 productStocks: prouctStocks,
                               ));
                             },
-                            child: const Text("Proceed TO Pay"),
+                            child: const Text("Proceed To Pay"),
                             style: ButtonStyle(
                                 shape: MaterialStateProperty.all(
                                     RoundedRectangleBorder(

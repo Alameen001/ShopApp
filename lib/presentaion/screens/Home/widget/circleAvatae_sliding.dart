@@ -29,6 +29,7 @@ class CircleSliding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final size = MediaQuery.of(context).size;
     return Container(
       height: 120,
       child: StreamBuilder<QuerySnapshot>(
@@ -46,15 +47,32 @@ class CircleSliding extends StatelessWidget {
                 DocumentSnapshot data = snapshot.data!.docs[index];
                 return GestureDetector(
                   onTap: () {
-                    Get.to(ProductList(category: data['name'],));
+                    Get.to(ProductList(
+                      category: data['name'],
+                    ));
                   },
                   child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5),
-                        child: CircleAvatar(
-                            radius: 45,
-                            backgroundImage: NetworkImage(data['image'])),
+                        // child: CircleAvatar(
+                        //   radius: 45,
+                        //   backgroundImage: NetworkImage(
+                            
+                        //     data['image'],),
+                       
+                        // ),
+
+                          child:  CircleAvatar(
+                      radius: 45,
+                      child: ClipOval(
+                        child: FadeInImage.assetNetwork(
+                          fit: BoxFit.cover,
+                          height: size.height * .5,
+                          width: size.width * .3,
+                          placeholder:'assets/download.jpg' , image: data['image'],placeholderFit: BoxFit.cover,)
+                      ),
+                    ),
                       ),
                       SizedBox(
                         height: 5,

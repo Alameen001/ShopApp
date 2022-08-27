@@ -23,10 +23,10 @@ class CatagoriesScreen extends StatelessWidget {
     "https://cdn.shopify.com/s/files/1/0752/6435/products/IMG_0039_d225b4e7-4fd2-44be-a371-5f173c86ce91.jpg?v=1634171243",
     "https://cdn.shopify.com/s/files/1/0584/3471/5799/products/Mr.Button31800_400x.jpg?v=1631964700",
   ];
-  
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -37,9 +37,7 @@ class CatagoriesScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('Category')
-              .snapshots(),
+          stream: FirebaseFirestore.instance.collection('Category').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -58,14 +56,34 @@ class CatagoriesScreen extends StatelessWidget {
                     onTap: () {
                       Get.to(ProductList(category: data['name']));
                     },
-                    leading: CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(data['image']),
+                    // leading: CircleAvatar(
+                      
+                    //   radius: 40,
+                    //   backgroundImage: NetworkImage(data['image'],),
+                    // ),
+                    // leading: FadeInImage.assetNetwork(
+                    //   fit: BoxFit.cover,
+                    //   // width: size.width * .5,
+                    //   // height: size.width * .5,
+                      
+                    //   placeholder: 'assets/download.jpg',
+                    //   image: data['image'],
+                    // ),
+                    leading:  CircleAvatar(
+                      radius: 44,
+                      child: ClipOval(
+                        child: FadeInImage.assetNetwork(
+                          fit: BoxFit.cover,
+                          height: size.height * .51,
+                          width: size.width * .19,
+                          placeholder:'assets/download.jpg' , image: data['image'],placeholderFit: BoxFit.cover,)
+                      ),
                     ),
+
                     title: Text(
                       data['name'],
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
                 );
